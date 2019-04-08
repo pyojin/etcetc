@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+<mapper namespace="com.lucy.plants.dao.ExcelDao">
+
+
+<select id="selectAllOrderList" resultType="ExcelDto">
+select send_name, send_tel, send_post, send_addr1, send_addr2, receive_name, 
+receive_tel, receive_post, receive_addr1, receive_addr2, goods_name,
+goods_price, pickup_date, order_date
+from excel
+</select>
+    
+
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- 1. 서비스 위치
+	2. myBatis 설정
+	3. 트랜잭션
+	4. bCrypt -->
+	
+	<!-- 서비스 위치 -->
+	<context:component-scan base-package="com.lucy.plants.service"/>
+
+	<!-- mybatis 설정 -->
+    <!-- value는 context.xml에서 설정한 Resource name -->
+	<bean id="ds" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="java:comp/env/jdbc_plants"></property>
+	</bean>
+
+	<bean id="ssfb" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ds"></property>
+		<property name="configLocation" value="classpath:com/lucy/plants/myBatis/configuration.xml" />
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:com/lucy/plants/myBatis/excel.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="ss" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="ssfb" />
+	</bean>
+
+	<!-- 트랜잭션 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ds"></property>
+    </bean>
+
+	<!-- 얘가 @Transaction 알게 해줌 -->
+    <tx:annotation-driven transaction-manager="txManager"/>   
+
+    <!-- 암호화 빈객체 -->
+    
+    <!-- <bean id="bCryptPasswordEncoder"
+        class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+    </bean> -->
+   
+</beans>
