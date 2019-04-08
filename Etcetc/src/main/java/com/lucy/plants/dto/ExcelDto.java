@@ -17,9 +17,9 @@ public class ExcelDto {
  private String receive_addr2;
  private String goods_name;	
  private int goods_price;
- @JsonFormat(pattern="yyyy-MM-dd")
+ @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")
  private Date pickup_date;
- @JsonFormat(pattern="yyyy-MM-dd")
+ @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")
  private Date order_date;
 public String getSend_name() {
 	return send_name;

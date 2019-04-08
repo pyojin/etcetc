@@ -16,9 +16,24 @@
 </head>
 <body>
 <div style="width:100%">
-	<h1>엑셀</h1>
+	<h1 style="margin-bottom:2rem">엑셀</h1>
         <div>
-              <table id="table_id">
+        	<!-- 검색 -->
+        	<div class="searchCondition">
+        	날짜조건: <select class="date">
+        		<option value="all">--전체--</option>
+        		<option value="order">주문일자</option>
+        		<option value="pickup">픽업일자</option>
+        	</select>
+        	<input type="date" id="startDate"> ~ <input type="date" id="endDate">
+        	&nbsp;<button>검색</button>
+        	</div>
+        	<!-- 엑셀 업로드/다운로드 -->
+        	<div class="btnDiv" style="margin-top:2rem;margin-bottom:2rem">
+        		<button>엑셀 업로드</button>
+        		<button>엑셀 다운로드</button>
+        	</div>
+             <table id="table_id">
    				 <thead>
       			 	<tr>
             			<th>보내는 사람 이름</th>
@@ -64,7 +79,17 @@
 </html>
 
 <script type="text/javascript">
+//전체목록 불러오기
 selectAllOrderList();
+
+//날짜 검색조건에 오늘을 기본값으로 설정
+var now = new Date();
+var month = ("0" + (now.getMonth()+1)).slice(-2);
+var day = ("0" + (now.getDate())).slice(-2);
+var today = now.getFullYear()+"-"+ month +"-"+ day;
+
+$('#startDate').val(today);
+$('#endDate').val(today);
 
 
 function selectAllOrderList(){ //전체목록 불러오기
