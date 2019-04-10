@@ -1,9 +1,14 @@
 package com.lucy.plants.controller;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.AbstractDocument.Content;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +34,13 @@ public class ExcelController {
 	public @ResponseBody List<ExcelDto> selectAllOrderList() {
 		List<ExcelDto> data = excelService.selectAllOrderList();
 		return data;
+	}
+	
+	@RequestMapping(value = "/selectExcelList", method = RequestMethod.POST,
+			headers = {"Content-type=application/json"}, produces = "application/json; charset=utf8")
+	public void selectExcelList(HttpServletResponse response, @RequestBody Map<String, Object> map) {
+		System.out.println(map);
+		excelService.selectExcelList(response, map);
 	}
 	
 }

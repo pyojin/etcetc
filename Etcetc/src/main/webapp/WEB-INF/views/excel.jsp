@@ -10,7 +10,10 @@
 <!-- DataTables -->
 <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css" rel="stylesheet" >
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js" charset="utf8" ></script>
-
+<!-- jQuery 파일 다운로드 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fileDownload/1.4.2/jquery.fileDownload.js" charset="utf8" ></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
 <title>Excel</title>
 </head>
@@ -20,18 +23,32 @@
         <div>
         	<!-- 검색 -->
         	<div class="searchCondition">
-        	날짜조건: <select class="date">
-        		<option value="all">--전체--</option>
-        		<option value="order">주문일자</option>
-        		<option value="pickup">픽업일자</option>
-        	</select>
-        	<input type="date" id="startDate"> ~ <input type="date" id="endDate">
-        	&nbsp;<button>검색</button>
+        		날짜조건: <select id="searchDate">
+        					<option value="all">--전체--</option>
+        					<option value="order">주문일자</option>
+        					<option value="pickup">픽업일자</option>
+        				</select>
+        		<input type="date" id="startDate"> ~ <input type="date" id="endDate">
+        		&nbsp;<input type="text" id="keyword">
+        		&nbsp;<button id="searchBtn">검색</button>
+        		&nbsp;<button id="selectExcelList">엑셀 다운로드</button>
+        	
+        		<!-- 파일 생성중 보여질 진행막대를 포함하고 있는 다이얼로그 입니다. -->
+	        	<div title="Data Download" id="preparing-file-modal" style="display: none;">
+	        		<div id="progressbar" style="width: 100%; height: 22px; margin-top: 20px;"></div>
+	        	</div>
+	        	<!-- 에러발생시 보여질 메세지 다이얼로그 입니다. -->
+	        	<div title="Error" id="error-modal" style="display: none;">
+	        		<p>생성실패.</p>
+	        	</div>
+        		
         	</div>
         	<!-- 엑셀 업로드/다운로드 -->
         	<div class="btnDiv" style="margin-top:2rem;margin-bottom:2rem">
-        		<button>엑셀 업로드</button>
-        		<button>엑셀 다운로드</button>
+        		<button id="updateExcelList">엑셀 업로드</button>
+ 
+        		
+
         	</div>
              <table id="table_id">
    				 <thead>
@@ -82,6 +99,46 @@
 //전체목록 불러오기
 selectAllOrderList();
 
+var searchDate;
+var startDate;
+var endDate;
+var keyword;
+var data;
+
+//검색버튼
+$('#searchBtn').click(function(){
+	searchDate = $('#searchDate').val();
+	startDate = $('#startDate').val();
+	endDate = $('#endDate').val();
+	keyword = $('#keyword').val();
+	
+	data = {searchDate:searchDate, startDate:startDate, endDate:endDate, keyword:keyword};
+	
+	console.log(data);
+
+})
+
+
+//엑셀 다운로드 버튼 누르면 다운로드
+$("#selectExcelList").click(function () {
+	var $preparingFileModal = $("#preparing-file-modal"); 
+	$preparingFileModal.dialog({ modal: true }); 
+	$("#progressbar").progressbar({value: false}); 
+	$.fileDownload("/plants/selectExcelList", { 
+		successCallback: function (url) { 
+			$preparingFileModal.dialog('close'); }, 
+		failCallback: function (responseHtml, url) { 
+			$preparingFileModal.dialog('close'); 
+			$("#error-modal").dialog({ modal: true }); },
+		httpMethod: 'POST',
+		contentType: 'application/json;charset=UTF-8',
+		data: data
+			}); 
+	// 버튼의 원래 클릭 이벤트를 중지 시키기 위해 필요합니다. 
+	return false; });
+
+
+
 //날짜 검색조건에 오늘을 기본값으로 설정
 var now = new Date();
 var month = ("0" + (now.getMonth()+1)).slice(-2);
@@ -90,6 +147,7 @@ var today = now.getFullYear()+"-"+ month +"-"+ day;
 
 $('#startDate').val(today);
 $('#endDate').val(today);
+
 
 
 function selectAllOrderList(){ //전체목록 불러오기

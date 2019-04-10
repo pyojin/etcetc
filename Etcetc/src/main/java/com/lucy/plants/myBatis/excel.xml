@@ -14,5 +14,25 @@ goods_price, pickup_date, order_date
 from excel
 </select>
     
+<select id="selectExcelList" fetchSize="100" parameterType="Map" resultType="ExcelDto">
+SELECT 
+send_name, send_tel, send_post, send_addr1, send_addr2, receive_name, 
+receive_tel, receive_post, receive_addr1, receive_addr2, goods_name,
+goods_price, pickup_date, order_date
+from excel
+where (send_name || send_tel || send_post || send_addr1 || send_addr2 ||receive_name
+|| receive_tel || receive_post || receive_addr1 || receive_addr2
+|| goods_name || goods_price || pickup_date || order_date) LIKE '%#{keyword}%'
+<choose>
+	<when test="#{searchDate} == 'pickup'">
+		and pickup_date &lt; #{startDate} and pickup_date > #{endDate}
+	</when>
+	<when test="#{searchDate} == 'order'">
+		and order_date &lt; #{startDate} and order_date > #{endDate}
+	</when>
+</choose>
+
+</select>
+
 
 </mapper>
