@@ -121,8 +121,8 @@ $('#searchBtn').click(function(){
 
 //엑셀 다운로드 버튼 누르면 다운로드
 $("#selectExcelList").click(function () {
-	var $preparingFileModal = $("#preparing-file-modal"); 
-	$preparingFileModal.dialog({ modal: true }); 
+	var $preparingFileModal = $("#preparing-file-modal");
+	$preparingFileModal.dialog({ modal: true });
 	$("#progressbar").progressbar({value: false}); 
 	$.fileDownload("/plants/selectExcelList", { 
 		successCallback: function (url) { 
@@ -131,7 +131,6 @@ $("#selectExcelList").click(function () {
 			$preparingFileModal.dialog('close'); 
 			$("#error-modal").dialog({ modal: true }); },
 		httpMethod: 'POST',
-		contentType: 'application/json;charset=UTF-8',
 		data: data
 			}); 
 	// 버튼의 원래 클릭 이벤트를 중지 시키기 위해 필요합니다. 

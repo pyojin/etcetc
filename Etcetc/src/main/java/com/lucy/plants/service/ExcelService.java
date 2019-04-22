@@ -1,14 +1,17 @@
 package com.lucy.plants.service;
 
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -25,6 +28,8 @@ public class ExcelService {
 
 	@Autowired
 	private SqlSession sqlSession;
+	@Autowired
+	private SqlSessionFactory ssfb;
 	
 	
 	//전체목록 불러오기
@@ -34,11 +39,21 @@ public class ExcelService {
 	
 	//엑셀 다운로드
 	@Transactional
-	public void selectExcelList(HttpServletResponse response, Map<String, Object> map) {
+	public void selectExcelList(HttpServletResponse response, HttpServletRequest request) {
+		
+		SqlSession sqlSession = ssfb.openSession();
+		
 	    // 메모리에 100개의 행을 유지합니다. 행의 수가 넘으면 디스크에 적습니다.
 	    SXSSFWorkbook wb = new SXSSFWorkbook(100);
 	    final Sheet sheet = wb.createSheet();
-
+	    
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    
+	    map.put("searchDate", request.getParameter("searchDate"));
+	    map.put("startDate", request.getParameter("startDate"));
+	    map.put("endDate", request.getParameter("endDate"));
+	    map.put("keyword", request.getParameter("keyword"));
+	    
 	    try {
 	        sqlSession.select("selectExcelList", map, new ResultHandler<ExcelDto>() {
 	  	    @Override
@@ -86,9 +101,7 @@ public class ExcelService {
 	        }
 
 	    } finally {
-	    	System.out.println("end1");
-	        sqlSession.close();
-	        System.out.println("end2");
+	    	sqlSession.close();
 	        // 디스크 적었던 임시파일을 제거합니다.
 	        wb.dispose();
 	        try { wb.close(); } catch(Exception ignore) {}

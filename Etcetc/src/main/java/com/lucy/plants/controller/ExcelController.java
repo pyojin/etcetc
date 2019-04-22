@@ -3,6 +3,7 @@ package com.lucy.plants.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.AbstractDocument.Content;
 
@@ -36,11 +37,9 @@ public class ExcelController {
 		return data;
 	}
 	
-	@RequestMapping(value = "/selectExcelList", method = RequestMethod.POST,
-			headers = {"Content-type=application/json"}, produces = "application/json; charset=utf8")
-	public void selectExcelList(HttpServletResponse response, @RequestBody Map<String, Object> map) {
-		System.out.println(map);
-		excelService.selectExcelList(response, map);
+	@RequestMapping(value = "/selectExcelList", method = RequestMethod.POST)
+	public void selectExcelList(HttpServletResponse response, HttpServletRequest request) {
+		excelService.selectExcelList(response, request);
 	}
 	
 }
