@@ -11,4 +11,6 @@ public interface ExcelDao {
 	
 	public List<ExcelDto> selectExcelList(Map<String, Object> map);
 
+	public List<ExcelDto> selectExcelList(Map<String, Object> map);
+
 }
