@@ -24,7 +24,7 @@
 		<velocity.version>1.7</velocity.version>
 		<velocity-tools.version>2.0</velocity-tools.version>
 		<velocity-dep.version>1.4</velocity-dep.version>
-		<springframework.security>4.0.1.RELEASE</springframework.security>
+		<springframework.security>5.2.10.RELEASE</springframework.security>
 	</properties>
 	
 	
